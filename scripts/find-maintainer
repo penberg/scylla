@@ -51,7 +51,11 @@ if __name__ == "__main__":
                 continue
 
             subsystem = Subsystem(subsystem_name)
-            subsystems += [subsystem]
+
+            if subsystem_name == "THE REST":
+                the_rest = subsystem
+            else:
+                subsystems += [subsystem]
 
             while len(lines) > 0:
                 annotation = lines.pop(0).strip()
@@ -65,10 +69,20 @@ if __name__ == "__main__":
                 elif key == 'F':
                     subsystem.add_pattern(value)
 
+    match = False
+
     for subsystem in subsystems:
         if subsystem.match(args.filename):
+            match = True
             print(subsystem.name)
             for maintainer in subsystem.maintainers:
                 print("  %s" % maintainer)
             for reviewer in subsystem.reviewers:
                 print("  %s" % reviewer)
+
+    if not match:
+        print("No subsystem found for file '%s'. Contact one of the following maintainers:" % args.filename)
+        for maintainer in the_rest.maintainers:
+            print("  %s" % maintainer)
+        for reviewer in the_rest.reviewers:
+            print("  %s" % reviewer)
