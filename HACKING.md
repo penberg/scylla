@@ -87,6 +87,32 @@ All changes to Scylla are submitted as patches to the public mailing list. Once 
 
 Detailed instructions for formatting patches for the mailing list and advice on preparing good patches are available at the [ScyllaDB website](http://docs.scylladb.com/contribute/).
 
+### Finding a person to review and merge your patches
+
+You can use the `scripts/find-maintainer` script to find a subsystem maintainer and/or reviewer for your patches. The script accepts a filename in the git source tree as an argument and outputs a list of subsystems the file belongs to and their respective maintainers and reviewers. For example, if you changed the `cql3/statements/create_view_statement.hh` file, run the script as follows:
+
+```bash
+$ ./scripts/find-maintainer cql3/statements/create_view_statement.hh
+```
+
+and you will get output like this:
+
+```
+CQL QUERY LANGUAGE
+  Tomasz Grabiec <tgrabiec@scylladb.com>
+  Pekka Enberg <penberg@scylladb.com>
+MATERIALIZED VIEWS
+  Pekka Enberg <penberg@scylladb.com>
+  Duarte Nunes <duarte@scylladb.com>
+  Nadav Har'El <nyh@scylladb.com>
+  Duarte Nunes <duarte@scylladb.com>
+THE REST
+  Avi Kivity <avi@scylladb.com>
+  Paweł Dziepak <pdziepak@scylladb.com>
+  Duarte Nunes <duarte@scylladb.com>
+  Tomasz Grabiec <tgrabiec@scylladb.com>
+```
+
 ### Running Scylla
 
 Once Scylla has been compiled, executing the (`debug` or `release`) target will start a running instance in the foreground:
