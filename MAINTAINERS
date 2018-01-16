@@ -1,44 +1,54 @@
 M: Maintainer with commit access
-R: Reviewer with subsystem expertise
+R: Reviewer
 F: Filename, directory, or pattern for the subsystem
 
 ---
 
-AUTH
-R: Vlad Zolotarov <vladz@scylladb.com>
-R: Jesse Haber-Kucharsky <jhaberku@scylladb.com>
-F: auth/*
+COUNTERS
+M: Paweł Dziepak <pdziepak@scylladb.com>
+F: tests/counter_test*
 
-COMMITLOG
+AUTH
 R: Calle Wilund <calle@scylladb.com>
-F: db/commitlog/*
+R: Jesse Haber-Kucharsky <jhaberku@scylladb.com>
+R: Vladislav Zolotarov <vladz@scylladb.com>
+M: Paweł Dziepak <pdziepak@scylladb.com>
+M: Duarte Nunes <duarte@scylladb.com>
+F: auth/*
+F: tests/auth*
+
+COMMITLOG / BATCHLOG
+R: Calle Wilund <calle@scylladb.com>
+M: Paweł Dziepak <pdziepak@scylladb.com>
+M: Duarte Nunes <duarte@scylladb.com>
+F: db/commitlog/* 
+F: db/batch*
+
+MATERLIZED VIEWS
+R: Nadav Har'El <nyh@scylladb.com>
+R: Duarte Nunes <duarte@scylladb.com>
+M: Pekka Enberg <penberg@scylladb.com>
+M: Duarte Nunes <duarte@scylladb.com>
+F: db/view/* 
+F: tests/view_schema_test*
+
+SECONDARY INDEX
+R: Nadav Har'El <nyh@scylladb.com>
+R: Pekka Enberg <penberg@scylladb.com>
+M: Pekka Enberg <penberg@scylladb.com>
+M: Duarte Nunes <duarte@scylladb.com>
+F: db/index/* 
+
 
 CQL TRANSPORT LAYER
 M: Pekka Enberg <penberg@scylladb.com>
 F: transport/*
 
-CQL QUERY LANGUAGE
-M: Tomasz Grabiec <tgrabiec@scylladb.com>
-M: Pekka Enberg <penberg@scylladb.com>
-F: cql3/*
-
 GOSSIP
 R: Asias He <asias@scylladb.com>
+M: Duarte Nunes <duarte@scylladb.com>
+M: Tomasz Grabiec <tgrabiec@scylladb.com>
 F: gms/*
-
-COORDINATOR
-R: Gleb Natapov <gleb@scylladb.com>
-F: service/storage_proxy*
-
-COMPACTION
-R: Raphael S. Carvalho <raphaelsc@scylladb.com>
-R: Glauber Costa <glauber@scylladb.com>
-R: Nadav Har'El <nyh@scylladb.com>
-F: sstables/compaction*
-
-COUNTERS
-M: Paweł Dziepak <pdziepak@scylladb.com>
-F: counters*
 
 DOCKER
 M: Pekka Enberg <penberg@scylladb.com>
@@ -49,54 +59,64 @@ M: Tomasz Grabiec <tgrabiec@scylladb.com>
 M: Paweł Dziepak <pdziepak@scylladb.com>
 F: utils/logalloc*
 
-MATERIALIZED VIEWS
-M: Duarte Nunes <duarte@scylladb.com>
-R: Nadav Har'El <nyh@scylladb.com>
-F: db/view/*
-F: cql3/statements/*view*
-
 PACKAGING
 R: Takuya ASADA <syuu@scylladb.com>
+M: Pekka Enberg <penberg@scylladb.com>
 F: dist/*
 
 REPAIR
 R: Asias He <asias@scylladb.com>
+R: Nadav Har'El <nyh@scylladb.com>
+M: Tomasz Grabiec <tgrabiec@scylladb.com>
+M: Duarte Nunes <duarte@scylladb.com>
 F: repair/*
-
-ROW CACHE
-M: Paweł Dziepak <pdziepak@scylladb.com>
-R: Piotr Jastrzebski <piotr@scylladb.com>
-F: row_cache.*
 
 SCHEMA MANAGEMENT
 M: Tomasz Grabiec <tgrabiec@scylladb.com>
-R: Duarte Nunes <duarte@scylladb.com>
-R: Pekka Enberg <penberg@scylladb.com>
-F: db/schema_tables*
-F: db/legacy_schema_migrator*
-F: schema*
-
-SECONDARY INDEXES
 M: Pekka Enberg <penberg@scylladb.com>
 M: Duarte Nunes <duarte@scylladb.com>
-R: Nadav Har'El <nyh@scylladb.com>
-F: db/index/*
-F: cql3/statements/*index*
+F: db/schema_tables*
+F: db/legacy_schema_migrator*
+F: service/migration*
+F: schema*
 
 SSTABLES
 R: Raphael S. Carvalho <raphaelsc@scylladb.com>
 R: Glauber Costa <glauber@scylladb.com>
 R: Nadav Har'El <nyh@scylladb.com>
+M: Tomasz Grabiec <tgrabiec@scylladb.com>
+M: Duarte Nunes <duarte@scylladb.com>
 F: sstables/*
 
 STREAMING
 R: Asias He <asias@scylladb.com>
+M: Tomasz Grabiec <tgrabiec@scylladb.com>
+M: Duarte Nunes <duarte@scylladb.com>
 F: streaming/*
+F: service/storage_service.*
 
 THRIFT TRANSPORT LAYER
 M: Duarte Nunes <duarte@scylladb.com>
 F: thrift/*
 
+COORDINATOR
+R: Gleb Natapov <gleb@scylladb.com>
+M: Paweł Dziepak <pdziepak@scylladb.com>
+M: Duarte Nunes <duarte@scylladb.com>
+F: service/storage_proxy.*
+
+CACHE
+R: Piotr Jastrzebski <piotr@scylladb.com>
+M: Tomasz Grabiec <tgrabiec@scylladb.com>
+M: Paweł Dziepak <pdziepak@scylladb.com>
+F: row_cache*
+F: *mutation*
+F: tests/mvcc*
+
+
 THE REST
-M: Avi Kivity <avi@scylladb.com>
+M: Paweł Dziepak <pdziepak@scylladb.com>
+M: Duarte Nunes <duarte@scylladb.com>
+M: Tomasz Grabiec <tgrabiec@scylladb.com>
 F: *
+F: */
