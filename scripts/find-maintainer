@@ -76,9 +76,9 @@ if __name__ == "__main__":
             match = True
             print(subsystem.name)
             for maintainer in subsystem.maintainers:
-                print("  %s" % maintainer)
+                print("  %-40s [maintainer]" % maintainer)
             for reviewer in subsystem.reviewers:
-                print("  %s" % reviewer)
+                print("  %-40s [reviewer]" % reviewer)
 
     if not match:
         print("No subsystem found for file '%s'. Contact one of the following maintainers:" % args.filename)
