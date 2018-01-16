@@ -99,13 +99,13 @@ and you will get output like this:
 
 ```
 CQL QUERY LANGUAGE
-  Tomasz Grabiec <tgrabiec@scylladb.com>
-  Pekka Enberg <penberg@scylladb.com>
+  Tomasz Grabiec <tgrabiec@scylladb.com>   [maintainer]
+  Pekka Enberg <penberg@scylladb.com>      [maintainer]
 MATERIALIZED VIEWS
-  Pekka Enberg <penberg@scylladb.com>
-  Duarte Nunes <duarte@scylladb.com>
-  Nadav Har'El <nyh@scylladb.com>
-  Duarte Nunes <duarte@scylladb.com>
+  Pekka Enberg <penberg@scylladb.com>      [maintainer]
+  Duarte Nunes <duarte@scylladb.com>       [maintainer]
+  Nadav Har'El <nyh@scylladb.com>          [reviewer]
+  Duarte Nunes <duarte@scylladb.com>       [reviewer]
 ```
 
 ### Running Scylla
