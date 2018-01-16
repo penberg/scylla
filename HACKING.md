@@ -106,11 +106,6 @@ MATERIALIZED VIEWS
   Duarte Nunes <duarte@scylladb.com>
   Nadav Har'El <nyh@scylladb.com>
   Duarte Nunes <duarte@scylladb.com>
-THE REST
-  Avi Kivity <avi@scylladb.com>
-  Paweł Dziepak <pdziepak@scylladb.com>
-  Duarte Nunes <duarte@scylladb.com>
-  Tomasz Grabiec <tgrabiec@scylladb.com>
 ```
 
 ### Running Scylla
