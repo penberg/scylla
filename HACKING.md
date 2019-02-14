@@ -119,9 +119,11 @@ In v3:
 
 The usual is "Tests: unit (release)", although running debug tests is encouraged.
 
-5. When answering review comments, prefer inline quotes as they make it easier to track the conversation across multiple e-mails.
+5. Please note that bug fixes often affect multiple branches. Please see the documentation on [backporting](docs/backporting.md) for more information.
 
-6. The Linux kernel's [Submitting Patches](https://www.kernel.org/doc/html/v4.19/process/submitting-patches.html) document offers excellent advice on how to prepare patches and patchsets for review. Since the Scylla development process is derived from the kernel's, almost all of the advice there is directly applicable.
+6. When answering review comments, prefer inline quotes as they make it easier to track the conversation across multiple e-mails.
+
+7. The Linux kernel's [Submitting Patches](https://www.kernel.org/doc/html/v4.19/process/submitting-patches.html) document offers excellent advice on how to prepare patches and patchsets for review. Since the Scylla development process is derived from the kernel's, almost all of the advice there is directly applicable.
 
 ### Finding a person to review and merge your patches
 
