@@ -858,6 +858,7 @@ headers = find_headers('.', excluded_dirs=['idl', 'build', 'seastar', '.git'])
 scylla_tests_generic_dependencies = [
     'test/lib/cql_test_env.cc',
     'test/lib/test_services.cc',
+    'test/lib/trivial_role_manager.cc',
 ]
 
 scylla_tests_dependencies = scylla_core + idls + scylla_tests_generic_dependencies + [
