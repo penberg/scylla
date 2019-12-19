@@ -49,6 +49,7 @@
 #include "db/view/view_builder.hh"
 #include "db/view/node_view_update_backlog.hh"
 #include "distributed_loader.hh"
+#include "test/lib/trivial_role_manager.hh"
 
 // TODO: remove (#293)
 #include "message/messaging_service.hh"
@@ -61,8 +62,19 @@
 
 using namespace std::chrono_literals;
 
+/// Returns a default database configuration for CQL unit tests.
+///
+/// Note: Authentication is disabled by default for isolation in the CQL query unit tests.
+static shared_ptr<db::config> default_config() {
+    auto cfg = make_shared<db::config>();
+    cfg->authorizer.set("AllowAllAuthorizer");
+    cfg->authenticator.set("AllowAllAuthenticator");
+    cfg->role_manager.set("TrivialRoleManager");
+    return cfg;
+}
+
 cql_test_config::cql_test_config()
-    : cql_test_config(make_shared<db::config>())
+    : cql_test_config(default_config())
 {}
 
 cql_test_config::cql_test_config(shared_ptr<db::config> cfg)
