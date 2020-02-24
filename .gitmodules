@@ -15,3 +15,6 @@
 [submodule "zstd"]
 	path = zstd
 	url = ../zstd
+[submodule "scylla-jmx"]
+	path = scylla-jmx
+	url = ../scylla-jmx
