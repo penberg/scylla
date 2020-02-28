@@ -1205,6 +1205,12 @@ zstd_cflags = seastar_cflags + ' -Wno-implicit-fallthrough'
 
 MODE_TO_CMAKE_BUILD_TYPE = {'release' : 'RelWithDebInfo', 'debug' : 'Debug', 'dev' : 'Dev', 'sanitize' : 'Sanitize' }
 
+def run_cmake(dir, cmd):
+    print("Running CMake in '{}' ...".format(dir))
+    print(" \\\n  ".join(cmd))
+    subprocess.check_call(cmd, shell=False, cwd=dir)
+
+
 def configure_seastar(build_dir, mode):
     seastar_build_dir = os.path.join(build_dir, mode, 'seastar')
 
@@ -1233,17 +1239,16 @@ def configure_seastar(build_dir, mode):
     if args.alloc_failure_injector:
         seastar_cmake_args += ['-DSeastar_ALLOC_FAILURE_INJECTION=ON']
 
-    seastar_cmd = ['cmake', '-G', 'Ninja', os.path.relpath('seastar', seastar_build_dir)] + seastar_cmake_args
-    cmake_dir = seastar_build_dir
+    seastar_cmake_cmd = ['cmake', '-G', 'Ninja', os.path.relpath('seastar', seastar_build_dir)] + seastar_cmake_args
+    seastar_cmake_dir = seastar_build_dir
     if args.dpdk:
         # need to cook first
-        cmake_dir = 'seastar' # required by cooking.sh
+        seastar_cmake_dir = 'seastar' # required by cooking.sh
         relative_seastar_build_dir = os.path.join('..', seastar_build_dir)  # relative to seastar/
-        seastar_cmd = ['./cooking.sh', '-i', 'dpdk', '-d', relative_seastar_build_dir, '--'] + seastar_cmd[4:]
+        seastar_cmake_cmd = ['./cooking.sh', '-i', 'dpdk', '-d', relative_seastar_build_dir, '--'] + seastar_cmake_cmd[4:]
 
-    print(seastar_cmd)
     os.makedirs(seastar_build_dir, exist_ok=True)
-    subprocess.check_call(seastar_cmd, shell=False, cwd=cmake_dir)
+    run_cmake(seastar_cmake_dir, seastar_cmake_cmd)
 
 for mode in build_modes:
     configure_seastar('build', mode)
@@ -1281,11 +1286,10 @@ def configure_zstd(build_dir, mode):
         '-DZSTD_BUILD_PROGRAMS=OFF'
     ]
 
-    zstd_cmd = ['cmake', '-G', 'Ninja', os.path.relpath('zstd/build/cmake', zstd_build_dir)] + zstd_cmake_args
+    zstd_cmake_cmd = ['cmake', '-G', 'Ninja', os.path.relpath('zstd/build/cmake', zstd_build_dir)] + zstd_cmake_args
 
-    print(zstd_cmd)
     os.makedirs(zstd_build_dir, exist_ok=True)
-    subprocess.check_call(zstd_cmd, shell=False, cwd=zstd_build_dir)
+    run_cmake(zstd_build_dir, zstd_cmake_cmd)
 
 args.user_cflags += " " + pkg_config('jsoncpp', '--cflags')
 args.user_cflags += ' -march=' + args.target
