@@ -480,6 +480,7 @@ arg_parser.add_argument('--with-antlr3', dest='antlr3_exec', action='store', def
                         help='path to antlr3 executable')
 arg_parser.add_argument('--with-ragel', dest='ragel_exec', action='store', default='ragel',
         help='path to ragel executable')
+arg_parser.add_argument('--verbose', dest='verbose', action='store_true', help='Make configure output more verbose.')
 add_tristate(arg_parser, name='stack-guards', dest='stack_guards', help='Use stack guards')
 args = arg_parser.parse_args()
 
@@ -1206,8 +1207,9 @@ zstd_cflags = seastar_cflags + ' -Wno-implicit-fallthrough'
 MODE_TO_CMAKE_BUILD_TYPE = {'release' : 'RelWithDebInfo', 'debug' : 'Debug', 'dev' : 'Dev', 'sanitize' : 'Sanitize' }
 
 def run_cmake(dir, cmd):
-    print("Running CMake in '{}' ...".format(dir))
-    print(" \\\n  ".join(cmd))
+    if args.verbose:
+        print("Running CMake in '{}' ...".format(dir))
+        print(" \\\n  ".join(cmd))
     subprocess.check_call(cmd, shell=False, cwd=dir)
 
 
