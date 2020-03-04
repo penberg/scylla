@@ -8,6 +8,7 @@ print_usage() {
     echo "  --xtrace print command traces before executing command"
     echo "  --reloc-pkg specify relocatable package path"
     echo "  --builddir specify rpmbuild directory"
+    echo "  --quiet print as little as possible"
     exit 1
 }
 RELOC_PKG=build/release/scylla-package.tar.gz
@@ -36,6 +37,10 @@ while [ $# -gt 0 ]; do
         "--builddir")
             BUILDDIR="$2"
             shift 2
+            ;;
+        "--quiet")
+            OPTS="$OPTS $1"
+            shift 1
             ;;
         *)
             print_usage
