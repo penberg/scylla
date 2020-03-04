@@ -1397,9 +1397,9 @@ with open(buildfile_tmp, 'w') as f:
         rule package
             command = scripts/create-relocatable-package.py --mode $mode $out
         rule rpmbuild
-            command = reloc/build_rpm.sh --reloc-pkg $in --builddir $out
+            command = reloc/build_rpm.sh --quiet --reloc-pkg $in --builddir $out
         rule debbuild
-            command = reloc/build_deb.sh --reloc-pkg $in --builddir $out
+            command = reloc/build_deb.sh --quiet --reloc-pkg $in --builddir $out
         ''').format(**globals()))
     for mode in build_modes:
         modeval = modes[mode]
