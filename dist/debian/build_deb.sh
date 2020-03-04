@@ -7,12 +7,14 @@ print_usage() {
     echo "build_deb.sh -target <codename> --dist --rebuild-dep --reloc-pkg build/release/scylla-package.tar.gz"
     echo "  --dist  create a public distribution package"
     echo "  --reloc-pkg specify relocatable package path"
+    echo "  --quiet print as little as possible"
     exit 1
 }
 
 DIST="false"
 TARGET=stable
 RELOC_PKG=
+DEBUILD_OUT=/dev/stdout
 while [ $# -gt 0 ]; do
     case "$1" in
         "--dist")
@@ -22,6 +24,10 @@ while [ $# -gt 0 ]; do
         "--reloc-pkg")
             RELOC_PKG=$2
             shift 2
+            ;;
+        "--quiet")
+            DEBUILD_OUT="/dev/null"
+            shift 1
             ;;
         *)
             print_usage
@@ -154,4 +160,4 @@ ln -fv dist/common/systemd/scylla-housekeeping-restart.service debian/$PRODUCT-s
 ln -fv dist/common/systemd/scylla-fstrim.service debian/$PRODUCT-server.scylla-fstrim.service
 ln -fv dist/common/systemd/node-exporter.service debian/$PRODUCT-server.node-exporter.service
 
-debuild -rfakeroot -us -uc
+debuild -rfakeroot -us -uc >$DEBUILD_OUT
