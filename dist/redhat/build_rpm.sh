@@ -8,10 +8,12 @@ print_usage() {
     echo "  --dist  create a public distribution rpm"
     echo "  --xtrace print command traces before executing command"
     echo "  --reloc-pkg specify relocatable package path"
+    echo "  --quiet print as little as possible"
     exit 1
 }
 DIST=false
 RELOC_PKG=
+QUIET_RPMBUILD=
 while [ $# -gt 0 ]; do
     case "$1" in
         "--dist")
@@ -29,6 +31,10 @@ while [ $# -gt 0 ]; do
         "--reloc-pkg")
             RELOC_PKG=$2
             shift 2
+            ;;
+        "--quiet")
+            QUIET_RPMBUILD="--quiet"
+            shift 1
             ;;
         *)
             print_usage
@@ -94,4 +100,4 @@ rpm_payload_opts=(--define "_binary_payload w2${xz_thread_param}.xzdio")
 
 ln -fv $RELOC_PKG $RPMBUILD/SOURCES/
 pystache dist/redhat/scylla.spec.mustache "{ \"version\": \"$SCYLLA_VERSION\", \"release\": \"$SCYLLA_RELEASE\", \"housekeeping\": $DIST, \"product\": \"$PRODUCT\", \"$PRODUCT\": true, \"reloc_pkg\": \"$RELOC_PKG_BASENAME\" }" > $RPMBUILD/SPECS/scylla.spec
-rpmbuild -ba "${rpm_payload_opts[@]}" --define "_topdir $RPMBUILD" $RPMBUILD/SPECS/scylla.spec
+rpmbuild $QUIET_RPMBUILD -ba "${rpm_payload_opts[@]}" --define "_topdir $RPMBUILD" $RPMBUILD/SPECS/scylla.spec
