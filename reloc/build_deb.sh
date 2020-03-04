@@ -6,6 +6,7 @@ print_usage() {
     echo "  --dist  create a public distribution package"
     echo "  --reloc-pkg specify relocatable package path"
     echo "  --builddir specify Debian package build path"
+    echo "  --quiet print as little as possible"
     exit 1
 }
 
@@ -26,6 +27,10 @@ while [ $# -gt 0 ]; do
         "--builddir")
             BUILDDIR="$2"
             shift 2
+            ;;
+        "--quiet")
+            OPTS="$OPTS $1"
+            shift 1
             ;;
         *)
             print_usage
