@@ -1756,6 +1756,21 @@ with open(buildfile_tmp, 'w') as f:
     f.write('build dist-rpm: phony dist-server-rpm dist-python-rpm dist-jmx-rpm dist-tools-rpm\n')
     f.write('build dist: phony dist-server dist-python dist-jmx dist-tools\n')
 
+    f.write(
+            'build dist-check: phony {}\n'.format(' '.join(['dist-check-{mode}'.format(mode=mode) for mode in build_modes]))
+    )
+
+    f.write('\n')
+    f.write(textwrap.dedent('''\
+        rule dist-check
+          command = ./tools/testing/dist-check/dist-check.sh --mode $mode
+        ''').format(**globals()))
+    for mode in build_modes:
+        f.write(textwrap.dedent('''\
+        build dist-check-{mode}: dist-check
+          mode = {mode}
+            ''').format(**globals()))
+
     f.write(textwrap.dedent('''\
         rule configure
           command = {python} configure.py $configure_args
