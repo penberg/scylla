@@ -52,3 +52,12 @@ ninja-build dist-check
 
 Please note that you need to run `dist-check` on the host because it
 requires Docker to perform the verification.
+
+To verify Scylla installation from are repository, run the following command:
+
+```
+./tools/testing/repo-check/repo-check.sh \
+  --repo-url-prefix http://repositories.scylladb.com/scylla/repo/<UUID> \
+  --gpg-key <public GPG key> \
+  --version <version>
+```
