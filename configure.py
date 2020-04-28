@@ -440,6 +440,7 @@ arg_parser.add_argument('--mode', action='append', choices=list(modes.keys()), d
 arg_parser.add_argument('--with', dest='artifacts', action='append', choices=all_artifacts, default=[])
 arg_parser.add_argument('--with-seastar', action='store', dest='seastar_path', default='seastar', help='Path to Seastar sources')
 arg_parser.add_argument('--with-libdeflate', action='store', dest='libdeflate_path', default='libdeflate', help='Path to libdeflate sources')
+arg_parser.add_argument('--with-zstd', action='store', dest='zstd_path', default='zstd', help='Path to zstd sources')
 arg_parser.add_argument('--cflags', action='store', dest='user_cflags', default='',
                         help='Extra flags for the C++ compiler')
 arg_parser.add_argument('--ldflags', action='store', dest='user_ldflags', default='',
@@ -1279,7 +1280,7 @@ def configure_zstd(build_dir, mode):
         '-DZSTD_BUILD_PROGRAMS=OFF'
     ]
 
-    zstd_cmd = ['cmake', '-G', 'Ninja', os.path.relpath('zstd/build/cmake', zstd_build_dir)] + zstd_cmake_args
+    zstd_cmd = ['cmake', '-G', 'Ninja', os.path.relpath(f"{args.zstd_path}/build/cmake", zstd_build_dir)] + zstd_cmake_args
 
     print(zstd_cmd)
     os.makedirs(zstd_build_dir, exist_ok=True)
@@ -1397,7 +1398,7 @@ with open(buildfile_tmp, 'w') as f:
         f.write(textwrap.dedent('''\
             cxx_ld_flags_{mode} = {cxx_ld_flags}
             ld_flags_{mode} = $cxx_ld_flags_{mode}
-            cxxflags_{mode} = $cxx_ld_flags_{mode} {cxxflags} -I. -I {libdeflate_path} -I $builddir/{mode}/gen
+            cxxflags_{mode} = $cxx_ld_flags_{mode} {cxxflags} -I. -I {libdeflate_path} -I {zstd_path}/lib -I $builddir/{mode}/gen
             libs_{mode} = -l{fmt_lib}
             seastar_libs_{mode} = {seastar_libs}
             rule cxx.{mode}
@@ -1446,7 +1447,7 @@ with open(buildfile_tmp, 'w') as f:
             rule test.{mode}
               command = ./test.py --mode={mode}
               description = TEST {mode}
-            ''').format(mode=mode, antlr3_exec=antlr3_exec, fmt_lib=fmt_lib, libdeflate_path=args.libdeflate_path, **modeval))
+            ''').format(mode=mode, antlr3_exec=antlr3_exec, fmt_lib=fmt_lib, libdeflate_path=args.libdeflate_path, zstd_path=args.zstd_path, **modeval))
         f.write(
             'build {mode}: phony {artifacts}\n'.format(
                 mode=mode,
