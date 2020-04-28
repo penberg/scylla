@@ -439,6 +439,7 @@ arg_parser.add_argument('--so', dest='so', action='store_true',
 arg_parser.add_argument('--mode', action='append', choices=list(modes.keys()), dest='selected_modes')
 arg_parser.add_argument('--with', dest='artifacts', action='append', choices=all_artifacts, default=[])
 arg_parser.add_argument('--with-seastar', action='store', dest='seastar_path', default='seastar', help='Path to Seastar sources')
+arg_parser.add_argument('--with-libdeflate', action='store', dest='libdeflate_path', default='libdeflate', help='Path to libdeflate sources')
 arg_parser.add_argument('--cflags', action='store', dest='user_cflags', default='',
                         help='Extra flags for the C++ compiler')
 arg_parser.add_argument('--ldflags', action='store', dest='user_ldflags', default='',
@@ -1396,7 +1397,7 @@ with open(buildfile_tmp, 'w') as f:
         f.write(textwrap.dedent('''\
             cxx_ld_flags_{mode} = {cxx_ld_flags}
             ld_flags_{mode} = $cxx_ld_flags_{mode}
-            cxxflags_{mode} = $cxx_ld_flags_{mode} {cxxflags} -I. -I $builddir/{mode}/gen
+            cxxflags_{mode} = $cxx_ld_flags_{mode} {cxxflags} -I. -I {libdeflate_path} -I $builddir/{mode}/gen
             libs_{mode} = -l{fmt_lib}
             seastar_libs_{mode} = {seastar_libs}
             rule cxx.{mode}
@@ -1445,7 +1446,7 @@ with open(buildfile_tmp, 'w') as f:
             rule test.{mode}
               command = ./test.py --mode={mode}
               description = TEST {mode}
-            ''').format(mode=mode, antlr3_exec=antlr3_exec, fmt_lib=fmt_lib, **modeval))
+            ''').format(mode=mode, antlr3_exec=antlr3_exec, fmt_lib=fmt_lib, libdeflate_path=args.libdeflate_path, **modeval))
         f.write(
             'build {mode}: phony {artifacts}\n'.format(
                 mode=mode,
@@ -1626,7 +1627,7 @@ with open(buildfile_tmp, 'w') as f:
         f.write('  pool = submodule_pool\n')
         f.write('  mode = {mode}\n'.format(**locals()))
         f.write('rule libdeflate.{mode}\n'.format(**locals()))
-        f.write('  command = make -C libdeflate BUILD_DIR=../build/{mode}/libdeflate/ CFLAGS="{libdeflate_cflags}" CC={args.cc} ../build/{mode}/libdeflate//libdeflate.a\n'.format(**locals()))
+        f.write('  command = make -C {args.libdeflate_path} BUILD_DIR=../build/{mode}/libdeflate/ CFLAGS="{libdeflate_cflags}" CC={args.cc} ../build/{mode}/libdeflate//libdeflate.a\n'.format(**locals()))
         f.write('build build/{mode}/libdeflate/libdeflate.a: libdeflate.{mode}\n'.format(**locals()))
         f.write('  pool = submodule_pool\n')
         f.write('build build/{mode}/zstd/lib/libzstd.a: ninja\n'.format(**locals()))

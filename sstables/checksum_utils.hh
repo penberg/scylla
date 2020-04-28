@@ -23,7 +23,7 @@
 
 #include <zlib.h>
 #include <seastar/util/gcc6-concepts.hh>
-#include "libdeflate/libdeflate.h"
+#include <libdeflate.h>
 #include "utils/gz/crc_combine.hh"
 
 GCC6_CONCEPT(
