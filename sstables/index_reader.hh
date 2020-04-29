@@ -325,7 +325,7 @@ class index_reader {
                        trust_promoted_index(sst->has_correct_promoted_index_entries()), *sst->_schema,
                        get_file(*sst, permit, std::move(trace_state)),
                        get_file_input_stream_options(sst, pc), begin, end - begin,
-                       (sst->get_version() == sstable_version_types::mc
+                       (sstables::is_at_least(sst->get_version(), sstable_version_types::mc)
                            ? std::make_optional(get_clustering_values_fixed_lengths(sst->get_serialization_header()))
                            : std::optional<column_values_fixed_lengths>{}))
         { }
