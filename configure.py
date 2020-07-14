@@ -1693,10 +1693,10 @@ with open(buildfile_tmp, 'w') as f:
         f.write('  pool = submodule_pool\n')
         f.write('  mode = {mode}\n'.format(**locals()))
         f.write(f'build $builddir/{mode}/dist/tar/scylla-package.tar.gz: copy $builddir/{mode}/scylla-package.tar.gz\n')
-        f.write(f'build $builddir/dist/{mode}/redhat: rpmbuild $builddir/{mode}/dist/tar/scylla-package.tar.gz\n')
+        f.write(f'build $builddir/{mode}/dist/rpm: rpmbuild $builddir/{mode}/dist/tar/scylla-package.tar.gz\n')
         f.write(f'  pool = submodule_pool\n')
         f.write(f'  mode = {mode}\n')
-        f.write(f'build $builddir/dist/{mode}/debian: debbuild $builddir/{mode}/dist/tar/scylla-package.tar.gz\n')
+        f.write(f'build $build/{mode}/dist/deb/scylla-server: debbuild $builddir/{mode}/dist/tar/scylla-package.tar.gz\n')
         f.write(f'  pool = submodule_pool\n')
         f.write(f'  mode = {mode}\n')
         f.write(f'build dist-server-{mode}: phony $builddir/dist/{mode}/redhat $builddir/dist/{mode}/debian\n')
@@ -1728,8 +1728,8 @@ with open(buildfile_tmp, 'w') as f:
     )
 
     f.write(textwrap.dedent(f'''\
-        build dist-server-deb: phony {' '.join(['$builddir/dist/{mode}/debian'.format(mode=mode) for mode in build_modes])}
-        build dist-server-rpm: phony {' '.join(['$builddir/dist/{mode}/redhat'.format(mode=mode) for mode in build_modes])}
+        build dist-server-deb: phony {' '.join(['$builddir/{mode}/dist/deb/scylla-server'.format(mode=mode) for mode in build_modes])}
+        build dist-server-rpm: phony {' '.join(['$builddir/{mode}/dist/rpm'.format(mode=mode) for mode in build_modes])}
         build dist-server: phony dist-server-rpm dist-server-deb
 
         rule build-submodule-reloc
