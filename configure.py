@@ -1782,7 +1782,16 @@ with open(buildfile_tmp, 'w') as f:
         '''))
     for mode in build_modes:
         f.write(textwrap.dedent(f'''\
-        build dist-{mode}: phony dist-server-{mode} dist-python dist-tools dist-jmx
+        build build/{mode}/dist/tar/scylla-python3-package.tar.gz: copy build/release/scylla-python3-package.tar.gz
+        build dist-python-{mode}: phony build/{mode}/dist/tar/scylla-python3-package.tar.gz
+
+        build build/{mode}/dist/tar/scylla-tools-package.tar.gz: copy tools/java/build/scylla-tools-package.tar.gz
+        build dist-tools-{mode}: phony build/{mode}/dist/tar/scylla-tools-package.tar.gz
+
+        build build/{mode}/dist/tar/scylla-jmx-package.tar.gz: copy tools/jmx/build/scylla-jmx-package.tar.gz
+        build dist-jmx-{mode}: phony build/{mode}/dist/tar/scylla-jmx-package.tar.gz
+
+        build dist-{mode}: phony dist-server-{mode} dist-python-{mode} dist-python dist-tools-{mode} dist-tools dist-jmx-{mode}
         build dist-check-{mode}: dist-check
           mode = {mode}
             '''))
