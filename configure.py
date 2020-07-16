@@ -1696,7 +1696,7 @@ with open(buildfile_tmp, 'w') as f:
         f.write(f'build $builddir/{mode}/dist/rpm: rpmbuild $builddir/{mode}/dist/tar/scylla-package.tar.gz\n')
         f.write(f'  pool = submodule_pool\n')
         f.write(f'  mode = {mode}\n')
-        f.write(f'build $build/{mode}/dist/deb/scylla-server: debbuild $builddir/{mode}/dist/tar/scylla-package.tar.gz\n')
+        f.write(f'build $builddir/{mode}/dist/deb/scylla-server: debbuild $builddir/{mode}/dist/tar/scylla-package.tar.gz\n')
         f.write(f'  pool = submodule_pool\n')
         f.write(f'  mode = {mode}\n')
         f.write(f'build dist-server-{mode}: phony $builddir/dist/{mode}/redhat $builddir/dist/{mode}/debian\n')
@@ -1732,44 +1732,40 @@ with open(buildfile_tmp, 'w') as f:
         build dist-server-rpm: phony {' '.join(['$builddir/{mode}/dist/rpm'.format(mode=mode) for mode in build_modes])}
         build dist-server: phony dist-server-rpm dist-server-deb
 
+        build dist-python-deb: phony {' '.join(['dist-python-deb-{mode}'.format(mode=mode) for mode in build_modes])}
+        build dist-python-rpm: phony {' '.join(['dist-python-rpm-{mode}'.format(mode=mode) for mode in build_modes])}
+        build dist-python: phony dist-python-rpm dist-python-deb
+
+        build dist-tools-deb: phony {' '.join(['dist-tools-deb-{mode}'.format(mode=mode) for mode in build_modes])}
+        build dist-tools-rpm: phony {' '.join(['dist-tools-rpm-{mode}'.format(mode=mode) for mode in build_modes])}
+        build dist-tools: phony dist-tools-rpm dist-tools-deb
+
+        build dist-jmx-deb: phony {' '.join(['dist-jmx-deb-{mode}'.format(mode=mode) for mode in build_modes])}
+        build dist-jmx-rpm: phony {' '.join(['dist-jmx-rpm-{mode}'.format(mode=mode) for mode in build_modes])}
+        build dist-jmx: phony dist-jmx-rpm dist-jmx-deb
+
         rule build-submodule-reloc
           command = cd $reloc_dir && ./reloc/build_reloc.sh --nodeps
         rule build-submodule-rpm
-          command = cd $dir && ./reloc/build_rpm.sh --reloc-pkg $artifact
+          command = cd $dir && ./reloc/build_rpm.sh --reloc-pkg $artifact --builddir $out_dir
         rule build-submodule-deb
-          command = cd $dir && ./reloc/build_deb.sh --reloc-pkg $artifact
+          command = cd $dir && ./reloc/build_deb.sh --reloc-pkg $artifact --builddir $out_dir
 
         build tools/jmx/build/scylla-jmx-package.tar.gz: build-submodule-reloc
           reloc_dir = tools/jmx
-        build dist-jmx-rpm: build-submodule-rpm tools/jmx/build/scylla-jmx-package.tar.gz
-          dir = tools/jmx
-          artifact = $builddir/scylla-jmx-package.tar.gz
-        build dist-jmx-deb: build-submodule-deb tools/jmx/build/scylla-jmx-package.tar.gz
-          dir = tools/jmx
-          artifact = $builddir/scylla-jmx-package.tar.gz
-        build dist-jmx: phony dist-jmx-rpm dist-jmx-deb
 
         build tools/java/build/scylla-tools-package.tar.gz: build-submodule-reloc
           reloc_dir = tools/java
-        build dist-tools-rpm: build-submodule-rpm tools/java/build/scylla-tools-package.tar.gz
-          dir = tools/java
-          artifact = $builddir/scylla-tools-package.tar.gz
-        build dist-tools-deb: build-submodule-deb tools/java/build/scylla-tools-package.tar.gz
-          dir = tools/java
-          artifact = $builddir/scylla-tools-package.tar.gz
-        build dist-tools: phony dist-tools-rpm dist-tools-deb
 
         rule build-python-reloc
           command = ./reloc/python3/build_reloc.sh
         rule build-python-rpm
-          command = ./reloc/python3/build_rpm.sh
+          command = ./reloc/python3/build_rpm.sh --reloc-pkg $in --builddir $out_dir
         rule build-python-deb
-          command = ./reloc/python3/build_deb.sh
+          command = ./reloc/python3/build_deb.sh --reloc-pkg $in --builddir $out_dir
 
         build $builddir/release/scylla-python3-package.tar.gz: build-python-reloc
-        build dist-python-rpm: build-python-rpm $builddir/release/scylla-python3-package.tar.gz
-        build dist-python-deb: build-python-deb $builddir/release/scylla-python3-package.tar.gz
-        build dist-python: phony dist-python-rpm dist-python-deb
+
         build dist-deb: phony dist-server-deb dist-python-deb dist-jmx-deb dist-tools-deb
         build dist-rpm: phony dist-server-rpm dist-python-rpm dist-jmx-rpm dist-tools-rpm
         build dist: phony dist-server dist-python dist-jmx dist-tools
@@ -1782,16 +1778,36 @@ with open(buildfile_tmp, 'w') as f:
         '''))
     for mode in build_modes:
         f.write(textwrap.dedent(f'''\
-        build build/{mode}/dist/tar/scylla-python3-package.tar.gz: copy build/release/scylla-python3-package.tar.gz
-        build dist-python-{mode}: phony build/{mode}/dist/tar/scylla-python3-package.tar.gz
+        build $builddir/{mode}/dist/tar/scylla-python3-package.tar.gz: copy $builddir/release/scylla-python3-package.tar.gz
+        build dist-python-rpm-{mode}: build-python-rpm $builddir/{mode}/dist/tar/scylla-python3-package.tar.gz
+          out_dir = $builddir/{mode}/dist/rpm
+        build dist-python-deb-{mode}: build-python-deb $builddir/{mode}/dist/tar/scylla-python3-package.tar.gz
+          out_dir = $builddir/{mode}/dist/deb/scylla-python3
+        build dist-python-{mode}: phony dist-python-rpm-{mode} dist-python-deb-{mode}
 
-        build build/{mode}/dist/tar/scylla-tools-package.tar.gz: copy tools/java/build/scylla-tools-package.tar.gz
-        build dist-tools-{mode}: phony build/{mode}/dist/tar/scylla-tools-package.tar.gz
+        build $builddir/{mode}/dist/tar/scylla-tools-package.tar.gz: copy tools/java/build/scylla-tools-package.tar.gz
+        build dist-tools-rpm-{mode}: build-submodule-rpm $builddir/{mode}/dist/tar/scylla-tools-package.tar.gz
+          dir = tools/java
+          out_dir = $builddir/{mode}/dist/rpm
+          artifact = $builddir/scylla-tools-package.tar.gz
+        build dist-tools-deb-{mode}: build-submodule-deb $builddir/{mode}/dist/tar/scylla-tools-package.tar.gz
+          dir = tools/java
+          out_dir = $builddir/{mode}/dist/deb/scylla-tools
+          artifact = $builddir/scylla-tools-package.tar.gz
+        build dist-tools-{mode}: phony dist-tools-rpm-{mode} dist-tools-deb-{mode}
 
-        build build/{mode}/dist/tar/scylla-jmx-package.tar.gz: copy tools/jmx/build/scylla-jmx-package.tar.gz
-        build dist-jmx-{mode}: phony build/{mode}/dist/tar/scylla-jmx-package.tar.gz
+        build $builddir/{mode}/dist/tar/scylla-jmx-package.tar.gz: copy tools/jmx/build/scylla-jmx-package.tar.gz
+        build dist-jmx-rpm-{mode}: build-submodule-rpm $builddir/{mode}/dist/tar/scylla-jmx-package.tar.gz
+          dir = tools/jmx
+          out_dir = $builddir/{mode}/dist/rpm
+          artifact = $builddir/scylla-jmx-package.tar.gz
+        build dist-jmx-deb-{mode}: build-submodule-deb $builddir/{mode}/dist/tar/scylla-jmx-package.tar.gz
+          dir = tools/jmx
+          out_dir = $builddir/{mode}/dist/deb/scylla-jmx
+          artifact = $builddir/scylla-jmx-package.tar.gz
+        build dist-jmx-{mode}: phony dist-jmx-rpm-{mode} dist-jmx-deb-{mode}
 
-        build dist-{mode}: phony dist-server-{mode} dist-python-{mode} dist-python dist-tools-{mode} dist-tools dist-jmx-{mode}
+        build dist-{mode}: phony dist-server-{mode} dist-python-{mode} dist-tools-{mode} dist-tools dist-jmx-{mode}
         build dist-check-{mode}: dist-check
           mode = {mode}
             '''))
