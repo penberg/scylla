@@ -29,24 +29,24 @@ The `dist` target generates the following tarballs (*relocatable packages*), whi
 
 ### Relocatable package artifacts
 
-* `build/<mode>/scylla-package.tar.gz`
-* `build/release/scylla-python3-package.tar.gz`
-* `scylla-jmx/build/scylla-jmx-package.tar.gz`
-* `scylla-tools/build/scylla-tools-package.tar.gz`
+* `build/<mode>/dist/tar/scylla-package.tar.gz`
+* `build/<mode>/dist/tar/scylla-python3-package.tar.gz`
+* `build/<mode>/dist/tar/scylla-jmx-package.tar.gz`
+* `build/<mode>/dist/tar/scylla-tools-package.tar.gz`
 
 ### RPM package artifacts
 
-* `build/dist/<mode>/redhat/RPMS/x86_64/scylla-*.rpm`
-* `build/dist/<mode>/redhat/RPMS/x86_64/scylla-conf-*.rpm`
-* `build/dist/<mode>/redhat/RPMS/x86_64/scylla-debuginfo-*.rpm`
-* `build/dist/<mode>/redhat/RPMS/x86_64/scylla-kernel-conf-*.rpm`
-* `build/dist/<mode>/redhat/RPMS/x86_64/scylla-server-*.rpm`
-* `build/redhat/RPMS/x86_64/scylla-python3-*.rpm`
-* `scylla-jmx/build/redhat/RPMS/noarch/scylla-jmx-*.rpm`
-* `scylla-tools/build/redhat/RPMS/noarch/scylla-tools-*.rpm`
-* `scylla-tools/build/redhat/RPMS/noarch/scylla-tools-core-*.rpm`
+* `build/<mode>/dist/rpm/RPMS/x86_64/scylla-*.rpm`
+* `build/<mode>/dist/rpm/RPMS/x86_64/scylla-python3*.rpm`
+* `build/<mode>/dist/rpm/RPMS/noarch/scylla-jmx*.rpm`
+* `build/<mode>/dist/rpm/RPMS/noarch/scylla-tools*.rpm`
 
 ### Debian package artifacts
+
+* `build/<mode>/dist/deb/scylla-server/scylla-*.deb`
+* `build/<mode>/dist/deb/scylla-python3/scylla-python3*.deb`
+* `build/<mode>/dist/deb/scylla-jmx/scylla-jmx*.deb`
+* `build/<mode>/dist/deb/scylla-tools/scylla-tools*.deb`
 
 ## Verifying
 
