@@ -431,8 +431,8 @@ protected:
 
     uint64_t partitions_per_sstable() const {
         uint64_t estimated_sstables = std::max(1UL, uint64_t(ceil(double(_info->start_size) / _max_sstable_size)));
-        return std::min(uint64_t(ceil(double(_estimated_partitions) / estimated_sstables)),
-                        _cf.get_compaction_strategy().adjust_partition_estimate(_ms_metadata, _estimated_partitions));
+        return std::max(1ul, std::min(uint64_t(ceil(double(_estimated_partitions) / estimated_sstables)),
+                        _cf.get_compaction_strategy().adjust_partition_estimate(_ms_metadata, _estimated_partitions)));
     }
 
     void setup_new_sstable(shared_sstable& sst) {
