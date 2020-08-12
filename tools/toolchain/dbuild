@@ -146,6 +146,11 @@ if [ -z "$is_podman" ]; then
        -v /etc/passwd:/etc/passwd:ro
        -v /etc/group:/etc/group:ro
        )
+else
+    TMP_PASSWD=$(mktemp --tmpdir passwd.XXXXXX)
+    FULLNAME=$(getent passwd $USER | cut -d ':' -f 5)
+    echo "$USER:x:0:0:$FULLNAME:$HOME:/bin/bash" > "$TMP_PASSWD"
+    docker_common_args+=(-v "$TMP_PASSWD:/etc/passwd:ro")
 fi
 
 if [ "$PWD" != "$toplevel" ]; then
@@ -196,6 +201,9 @@ kill_it() {
         container=
     fi
     rm -rf "$tmpdir"
+    if [[ -v "$TMP_PASSWD" ]]; then
+        rm -f "$TMP_PASSWD"
+    fi
 }
 
 trap kill_it SIGTERM SIGINT SIGHUP EXIT
