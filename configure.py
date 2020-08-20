@@ -1515,7 +1515,7 @@ with open(buildfile_tmp, 'w') as f:
                 artifacts=str.join(' ', ('$builddir/' + mode + '/' + x for x in build_artifacts))
             )
         )
-        include_dist_target = f'dist-{mode}' if args.enable_dist is None or args.enable_dist else ''
+        include_dist_target = f'{mode}-dist' if args.enable_dist is None or args.enable_dist else ''
         f.write(f'build {mode}: phony {mode}-build {include_dist_target}\n')
         compiles = {}
         swaggers = set()
@@ -1813,8 +1813,8 @@ with open(buildfile_tmp, 'w') as f:
         build $builddir/{mode}/dist/tar/scylla-tools-package.tar.gz: copy tools/java/build/scylla-tools-package.tar.gz
         build $builddir/{mode}/dist/tar/scylla-jmx-package.tar.gz: copy tools/jmx/build/scylla-jmx-package.tar.gz
 
-        build dist-{mode}: phony dist-server-{mode} dist-python3 dist-tools dist-jmx
-        build dist-check-{mode}: dist-check
+        build {mode}-dist: phony dist-server-{mode} dist-python3 dist-tools dist-jmx
+        build {mode}-dist-check: dist-check
           mode = {mode}
             '''))
 

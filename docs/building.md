@@ -113,7 +113,7 @@ To build packages, run:
 Alternatively, to run unit tests for a specific build mode, run:
 
 ```console
-./tools/toolchain/dbuild ninja-build dist-<mode>
+./tools/toolchain/dbuild ninja-build <mode>-dist
 ```
 
 To verify the packages, run:
