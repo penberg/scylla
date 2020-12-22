@@ -8,6 +8,10 @@ ENV container docker
 ARG SCYLLA_REPO_URL=http://downloads.scylladb.com/rpm/unstable/centos/master/latest/scylla.repo
 ARG VERSION=666.development
 
+# The MINIMAL argument specifies that the built Docker image only
+# contains the bare minimum dependencies for a Scylla node.
+ARG MINIMAL
+
 ADD scylla_bashrc /scylla_bashrc
 
 # Scylla configuration:
@@ -33,17 +37,25 @@ ADD scyllasetup.py /scyllasetup.py
 ADD commandlineparser.py /commandlineparser.py
 ADD docker-entrypoint.py /docker-entrypoint.py
 ADD node_exporter_install /node_exporter_install
-# Install Scylla:
+
+# Install Scylla Server:
 RUN curl $SCYLLA_REPO_URL -o /etc/yum.repos.d/scylla.repo && \
     yum -y install epel-release && \
     yum -y clean expire-cache && \
     yum -y update && \
-    yum -y install scylla-$VERSION hostname supervisor openssh-server openssh-clients rsyslog && \
-    yum clean all && \
+    yum -y install scylla-server-$VERSION hostname supervisor rsyslog
+
+# Install other other components unless this is a minimal image:
+RUN if [[ -z "$MINIMAL" ]]; then \
+        yum -y install scylla-jmx-$VERSION scylla-tools-$VERSION && \
+        yum -y install openssh-server openssh-clients && \
+        /node_exporter_install \
+    ; fi
+
+RUN yum clean all && \
     cat /scylla_bashrc >> /etc/bashrc && \
     mkdir -p /etc/supervisor.conf.d && \
     mkdir -p /var/log/scylla && \
-    /node_exporter_install && \
     chown -R scylla.scylla /var/lib/scylla
 
 ENV PATH /opt/scylladb/python3/bin:$PATH
